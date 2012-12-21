@@ -21,3 +21,4 @@
 \\vmware-host\shared folders\documents\visual studio 2010\Projects\VansoPushPortal\ServiceLogic\obj\Debug\ResolveAssemblyReference.cache
 \\vmware-host\shared folders\documents\visual studio 2010\Projects\VansoPushPortal\ServiceLogic\obj\Debug\ServiceLogic.dll
 \\vmware-host\shared folders\documents\visual studio 2010\Projects\VansoPushPortal\ServiceLogic\obj\Debug\ServiceLogic.pdb
+\\vmware-host\shared folders\documents\visual studio 2010\Projects\VansoPushPortal\ServiceLogic\bin\Debug\AppfailReporting.dll

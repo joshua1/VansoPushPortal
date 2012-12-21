@@ -18,3 +18,4 @@
 \\vmware-host\shared folders\documents\visual studio 2010\Projects\VansoPushPortal\ServiceModel\obj\Debug\ResolveAssemblyReference.cache
 \\vmware-host\shared folders\documents\visual studio 2010\Projects\VansoPushPortal\ServiceModel\obj\Debug\ServiceModel.dll
 \\vmware-host\shared folders\documents\visual studio 2010\Projects\VansoPushPortal\ServiceModel\obj\Debug\ServiceModel.pdb
+\\vmware-host\shared folders\documents\visual studio 2010\Projects\VansoPushPortal\ServiceModel\bin\Debug\AppfailReporting.dll

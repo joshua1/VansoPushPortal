@@ -22,3 +22,4 @@
 \\vmware-host\shared folders\documents\visual studio 2010\Projects\VansoPushPortal\VansoPushPortal\obj\Debug\ResolveAssemblyReference.cache
 \\vmware-host\shared folders\documents\visual studio 2010\Projects\VansoPushPortal\VansoPushPortal\obj\Debug\VansoPushPortal.dll
 \\vmware-host\shared folders\documents\visual studio 2010\Projects\VansoPushPortal\VansoPushPortal\obj\Debug\VansoPushPortal.pdb
+\\vmware-host\shared folders\documents\visual studio 2010\Projects\VansoPushPortal\VansoPushPortal\bin\AppfailReporting.dll
