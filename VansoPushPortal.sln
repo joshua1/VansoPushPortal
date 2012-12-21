@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VansoPushPortal", "VansoPushPortal\VansoPushPortal.csproj", "{8553F98B-B56F-45D1-B164-793BA13E63ED}"
+	ProjectSection(ProjectDependencies) = postProject
+		{653D45A9-07DB-4D33-B6DC-5BFA2DAD34F3} = {653D45A9-07DB-4D33-B6DC-5BFA2DAD34F3}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceModel", "ServiceModel\ServiceModel.csproj", "{7499A9C0-33DF-463F-B848-D7FBB870AE91}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceLogic", "ServiceLogic\ServiceLogic.csproj", "{653D45A9-07DB-4D33-B6DC-5BFA2DAD34F3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7499A9C0-33DF-463F-B848-D7FBB870AE91} = {7499A9C0-33DF-463F-B848-D7FBB870AE91}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8553F98B-B56F-45D1-B164-793BA13E63ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8553F98B-B56F-45D1-B164-793BA13E63ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8553F98B-B56F-45D1-B164-793BA13E63ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8553F98B-B56F-45D1-B164-793BA13E63ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7499A9C0-33DF-463F-B848-D7FBB870AE91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7499A9C0-33DF-463F-B848-D7FBB870AE91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7499A9C0-33DF-463F-B848-D7FBB870AE91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7499A9C0-33DF-463F-B848-D7FBB870AE91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{653D45A9-07DB-4D33-B6DC-5BFA2DAD34F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{653D45A9-07DB-4D33-B6DC-5BFA2DAD34F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{653D45A9-07DB-4D33-B6DC-5BFA2DAD34F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{653D45A9-07DB-4D33-B6DC-5BFA2DAD34F3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
