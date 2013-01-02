@@ -77,6 +77,7 @@ namespace VansoPushPortal
         private void ConfigureAuth(Container container)
         {
             var appSettings = new AppSettings();
+            
             Plugins.Add(new AuthFeature(
                () => new AuthUserSession(), 
                new IAuthProvider[] {
@@ -90,8 +91,16 @@ namespace VansoPushPortal
             container.RegisterAs<CustomRegistrationValidator, IValidator<Registration>>();
             
             //Store User Data into the referenced SqlServer database
-            var userRep=new OrmLiteAuthRepository(container.Resolve<IDbConnectionFactory>());
-            container.Register<IUserAuthRepository>(userRep);
+           
+            container.Register<IUserAuthRepository>(c =>
+                 new OrmLiteAuthRepository(c.Resolve<IDbConnectionFactory>()));
+
+            var userRep = (OrmLiteAuthRepository)container.Resolve<IUserAuthRepository>();
+            //If using and RDBMS to persist UserAuth, we must create required tables
+            if (appSettings.Get("RecreateAuthTables", false))
+                userRep.DropAndReCreateTables(); //Drop and re-create all Auth and registration tables
+            else
+                userRep.CreateMissingTables();   //Create only the missing tables
 
             //Add a user for testing purposes
             string hash;
@@ -111,11 +120,7 @@ namespace VansoPushPortal
             }, password);
 
 
-            var authRepo = (OrmLiteAuthRepository)container.Resolve<IUserAuthRepository>(); //If using and RDBMS to persist UserAuth, we must create required tables
-            if (appSettings.Get("RecreateAuthTables", false))
-                authRepo.DropAndReCreateTables(); //Drop and re-create all Auth and registration tables
-            else
-                authRepo.CreateMissingTables();   //Create only the missing tables
+          
 
             Plugins.Add(new RequestLogsFeature());
         }
