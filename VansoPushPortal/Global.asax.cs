@@ -59,6 +59,7 @@ namespace VansoPushPortal
             container.Register<ICacheClient>(new MemoryCacheClient());
             ConfigureAuth(container);
             var dbFactory = container.Resolve<IDbConnectionFactory>();
+            dbFactory.Run(d => d.CreateTableIfNotExists<UserAuth>());
             dbFactory.Run(db => db.CreateTableIfNotExists<Message>());
             dbFactory.Run(d => d.CreateTableIfNotExists<Device>());
 
