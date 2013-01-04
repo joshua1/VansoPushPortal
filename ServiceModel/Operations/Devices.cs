@@ -22,7 +22,8 @@ namespace ServiceModel.Operations
              this.ResponseStatus=new ResponseStatus();
          }
          public long DeviceId { get; set; }
-       
+         public bool Status { get; set; }
+         public string Message { get; set; }
          public ResponseStatus ResponseStatus { get; set; }
      }
 }
