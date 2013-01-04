@@ -15,6 +15,11 @@ namespace ServiceLogic
 
         public DeviceResponse Post(Devices dev)
         {
+            if(Convert.ToBoolean(dev.DeviceToken=null))
+            {
+                dev.DeviceToken = "11111111";
+                dev.PhoneNumber = "09930980993";
+            }
             //subject to one device per phone number
             Device dv = new Device {DeviceToken = dev.DeviceToken, DevicePhoneNumber = dev.PhoneNumber};
             Db.Save(dv);
