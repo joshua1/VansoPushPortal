@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using ServiceModel;
 using ServiceModel.Operations;
+using ServiceStack.Common.Web;
 using ServiceStack.ServiceInterface;
 using ServiceStack.OrmLite;
 using ServiceStack.OrmLite.SqlServer;
@@ -16,7 +17,8 @@ namespace ServiceLogic
     {
         public string ApiToken = ConfigurationManager.AppSettings["ApiToken"];
         public string ApplicationCode = ConfigurationManager.AppSettings["ApplicationCode"];
-        
+
+        [AddHeader(ContentType = ContentType.Json)]
         public MessageResponse Post(Messages msg)
         {
             List<string> deviceTokens = null;
