@@ -18,7 +18,7 @@ namespace ServiceLogic
             //subject to one device per phone number
             Device dv = new Device {DeviceToken = dev.DeviceToken, DevicePhoneNumber = dev.PhoneNumber};
             Db.Save(dv);
-            return new DeviceResponse {DeviceId=Db.GetLastInsertId(),Message = "Saved",Status=true}; 
+            return new DeviceResponse {DeviceId=Db.GetLastInsertId(),Message = "Saved",Status=true,Device=new Device{DeviceToken=dev.DeviceToken,DevicePhoneNumber=dev.PhoneNumber}}; 
         }
     }
 }
