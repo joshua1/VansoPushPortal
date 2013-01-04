@@ -8,11 +8,13 @@ using Funq;
 using ServiceModel;
 using ServiceStack.CacheAccess;
 using ServiceStack.CacheAccess.Providers;
+using ServiceStack.Common;
 using ServiceStack.Common.Web;
 using ServiceStack.Configuration;
 using ServiceStack.FluentValidation;
 using ServiceStack.OrmLite;
 using ServiceStack.OrmLite.SqlServer;
+using ServiceStack.ServiceHost;
 using ServiceStack.ServiceInterface;
 using ServiceStack.ServiceInterface.Admin;
 using ServiceStack.ServiceInterface.Auth;
@@ -65,7 +67,8 @@ namespace VansoPushPortal
 
             SetConfig(new EndpointHostConfig
             {
-                //EnableFeatures = Feature.All.Remove(disableFeatures),
+                DefaultContentType = ContentType.Json ,
+                EnableFeatures = Feature.All.Remove(Feature.Html).Remove(Feature.Xml),
                 AppendUtf8CharsetOnContentTypes = new HashSet<string> { ContentType.Json },
             });
             //Or if Haz Redis

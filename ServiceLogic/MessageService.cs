@@ -53,6 +53,7 @@ namespace ServiceLogic
                 message.MessageId = resp.response.messages[0];
             }
             Db.SaveAll(messageList);
+
             return resp;
         }
     }
