@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ServiceStack.ServiceHost;
+using ServiceStack.ServiceInterface.ServiceModel;
 
 namespace ServiceModel.Operations
 {
@@ -16,7 +17,12 @@ namespace ServiceModel.Operations
 
      public class DeviceResponse
      {
-         public bool Status { get; set; }
-         public string Status_Message { get; set; }
+         public DeviceResponse()
+         {
+             this.ResponseStatus=new ResponseStatus();
+         }
+         public long DeviceId { get; set; }
+       
+         public ResponseStatus ResponseStatus { get; set; }
      }
 }
