@@ -20,10 +20,12 @@ namespace ServiceModel.Operations
          public DeviceResponse()
          {
              this.ResponseStatus=new ResponseStatus();
+             this.Device=new Device();
          }
          public long DeviceId { get; set; }
          public bool Status { get; set; }
          public string Message { get; set; }
+         public Device Device { get; set; }
          public ResponseStatus ResponseStatus { get; set; }
      }
 }
