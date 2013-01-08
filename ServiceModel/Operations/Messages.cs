@@ -7,7 +7,7 @@ using ServiceStack.ServiceInterface.ServiceModel;
 
 namespace ServiceModel.Operations
 {
-    [Route("/messages/new", "POST")]
+    [Route("/messages", "POST")]
     [Route("/messages", "GET")]
     [Route("/messages/{id}")]
     public class Messages

@@ -9,7 +9,19 @@
     <script type="text/javascript" src="https://s3.amazonaws.com/appfail-us/appfail.reporting.min.js?slug=abc123"></script>
     <script>require('initialize');</script>
 </head>
-<body>
+<body class="container-fluid nopadding">
     <!-- ApplicationView -->
 </body>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $.extend($.gritter.options, {
+            class_name: 'gritter-light',
+            position: 'top-right', // possibilities: bottom-left, bottom-right, top-left, top-right
+            fade_in_speed: 100, // how fast notifications fade in (string or int)
+            fade_out_speed: 100, // how fast the notices fade out
+            time: 4000, // hang on the screen for...
+            sticky:false
+        });
+    });
+    </script>
 </html>
