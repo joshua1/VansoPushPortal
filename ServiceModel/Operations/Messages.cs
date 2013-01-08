@@ -9,7 +9,7 @@ namespace ServiceModel.Operations
 {
     [Route("/messages", "POST")]
     [Route("/messages", "GET")]
-    [Route("/messages/{id}")]
+    [Route("/messages/{id}","GET")]
     public class Messages
     {
         public string MessageText { get; set; }
