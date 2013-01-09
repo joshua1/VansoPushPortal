@@ -1,5 +1,5 @@
 var App = require('app');
-App.RegController=Em.Controller.extend({
+App.RegController=Em.ObjectController.extend({
     email:'',
     firstName:'',
     lastName:'',

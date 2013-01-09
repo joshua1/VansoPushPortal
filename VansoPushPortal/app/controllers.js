@@ -1,8 +1,7 @@
 // load all your controllers here
 
 require('controllers/application');
-require('controllers/home');
-require('controllers/bob');
+require('controllers/reg');
 require('controllers/message');
 require('controllers/auth');
 require('controllers/user');

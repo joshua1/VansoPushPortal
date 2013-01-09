@@ -919,6 +919,18 @@ window.require.define({"templates/reg": function(exports, require, module) {
    module.exports = module.id;
 }});
 
+window.require.define({"templates/users/user": function(exports, require, module) {
+  
+  Ember.TEMPLATES[module.id] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+  helpers = helpers || Ember.Handlebars.helpers;
+    var foundHelper, self=this;
+
+
+    data.buffer.push("<h1>user view!!</h1>");
+  });
+   module.exports = module.id;
+}});
+
 window.require.define({"views": function(exports, require, module) {
   // load all your views here
 

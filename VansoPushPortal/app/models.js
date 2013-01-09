@@ -1,3 +1,4 @@
 // load all your models here
 
-require('models/bob');
+require('models/message');
+require('models/user');

@@ -1,5 +1,5 @@
 var App = require('app');
-App.AuthController = Em.Controller.extend({
+App.AuthController = Em.ObjectController.extend({
 
     authenticated: false,
     failedAttempts: 0,
