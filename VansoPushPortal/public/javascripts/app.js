@@ -180,8 +180,7 @@ window.require.define({"controllers": function(exports, require, module) {
   // load all your controllers here
 
   require('controllers/application');
-  require('controllers/home');
-  require('controllers/bob');
+  require('controllers/reg');
   require('controllers/message');
   require('controllers/auth');
   require('controllers/user');
@@ -206,7 +205,7 @@ window.require.define({"controllers/application": function(exports, require, mod
 
 window.require.define({"controllers/auth": function(exports, require, module) {
   var App = require('app');
-  App.AuthController = Em.Controller.extend({
+  App.AuthController = Em.ObjectController.extend({
 
       authenticated: false,
       failedAttempts: 0,
@@ -293,7 +292,7 @@ window.require.define({"controllers/message": function(exports, require, module)
 
 window.require.define({"controllers/reg": function(exports, require, module) {
   var App = require('app');
-  App.RegController=Em.Controller.extend({
+  App.RegController=Em.ObjectController.extend({
       email:'',
       firstName:'',
       lastName:'',
@@ -386,7 +385,8 @@ window.require.define({"initialize": function(exports, require, module) {
 window.require.define({"models": function(exports, require, module) {
   // load all your models here
 
-  require('models/bob');
+  require('models/message');
+  require('models/user');
 }});
 
 window.require.define({"models/message": function(exports, require, module) {
@@ -544,6 +544,7 @@ window.require.define({"templates": function(exports, require, module) {
 
   require('templates/application');
   require('templates/auth');
+  require('templates/reg');
   require('template/messages/message');
   require('template/messages/messages');
   require('template/users/user');
