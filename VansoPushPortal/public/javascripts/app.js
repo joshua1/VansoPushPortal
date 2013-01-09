@@ -192,7 +192,7 @@ window.require.define({"controllers/application": function(exports, require, mod
   var App = require('app');
 
   App.ApplicationController = Em.Controller.extend({
-      authenticatedBinding:App.AuthController.authenticated,
+      authenticatedBinding:Ember.Binding.oneWay(App.AuthController.authenticated),
       userName: function() {
           if (this.get('authenticated')) {
               return 'friend';
