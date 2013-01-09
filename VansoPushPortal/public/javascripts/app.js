@@ -545,11 +545,11 @@ window.require.define({"templates": function(exports, require, module) {
   require('templates/application');
   require('templates/auth');
   require('templates/reg');
-  require('template/messages/message');
-  require('template/messages/messages');
-  require('template/users/user');
-  require('template/layout/userNav');
-  require('template/layout/navigation');
+  require('templates/messages/message');
+  require('templates/messages/messages');
+  require('templates/users/user');
+  require('templates/layout/userNav');
+  require('templates/layout/navigation');
 
   
 }});
@@ -835,10 +835,10 @@ window.require.define({"templates/messages/message": function(exports, require, 
   
   Ember.TEMPLATES[module.id] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
   helpers = helpers || Ember.Handlebars.helpers;
-    var buffer = '', foundHelper, self=this;
+    var foundHelper, self=this;
 
 
-    return buffer;
+    data.buffer.push("<h1>This is the message template</h1>");
   });
    module.exports = module.id;
 }});
