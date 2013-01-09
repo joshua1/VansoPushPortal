@@ -8,7 +8,7 @@ using ServiceStack.ServiceInterface.ServiceModel;
 namespace ServiceModel.Operations
 {
      [Route("/devices", "POST")]
-    [Route("/devices/{PhoneNumber}")]
+    [Route("/devices/{PhoneNumber}","GET")]
     public class Devices
     {
          public string PhoneNumber { get; set; }

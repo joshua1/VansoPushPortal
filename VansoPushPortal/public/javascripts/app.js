@@ -93,22 +93,65 @@ window.require.define({"Store/store": function(exports, require, module) {
 
   App.adapter=DS.Adapter.create({
       find:function(store,type,id){
-
+          var url=type.url;
+          url=url.fmt(id);
+          jQuery.getJSON(url,function(data){
+             store.load(type,id,data);
+          });
       },
       findAll:function(store,type){
+          var url=type.url;
+          jQuery.getJSON(url,function(data){
+              store.loadMany(type,data);
+          });
 
       },
       createRecord:function(store,type,model){
+          var url = type.url;
+          jQuery.ajax({
+              url: url,
+              data: model.get('data'),
+              dataType: 'json',
+              type: 'POST',
 
+              success: function(data) {
+                  // data is a hash of key/value pairs representing the record.
+                  // In general, this hash will contain a new id, which the
+                  // store will now use to index the record. Future calls to
+                  // store.find(type, id) will find this record.
+                  store.didCreateRecord(model, data);
+              }
+          });
       },
       updateRecord:function(store,type,model){
+          var url = type.url;
+
+          jQuery.ajax({
+              url: url.fmt(model.get('id')),
+              data: model.get('data'),
+              dataType: 'json',
+              type: 'PUT',
+
+              success: function(data) {
+                  // data is a hash of key/value pairs representing the record
+                  // in its current state on the server.
+                  store.didUpdateRecord(model, data);
+              }
+          });
 
       },
       deleteRecord:function(store,type,model){
+          var url = type.url;
 
-      },
-      findQuery: function(store, type, query, modelArray) {
+          jQuery.ajax({
+              url: url.fmt(model.get('id')),
+              dataType: 'json',
+              type: 'DELETE',
 
+              success: function() {
+                  store.didDeleteRecord(model);
+              }
+          });
       },
       commit: function(store, commitDetails) {
           commitDetails.updated.eachType(function(type, array) {
@@ -162,6 +205,7 @@ window.require.define({"controllers/application": function(exports, require, mod
 }});
 
 window.require.define({"controllers/auth": function(exports, require, module) {
+  var App = require('app');
   App.AuthController = Em.Controller.extend({
 
       authenticated: false,
@@ -170,17 +214,43 @@ window.require.define({"controllers/auth": function(exports, require, module) {
       password:'',
 
       authenticate: function() {
-          if (this.credentialsValid()) {
+          //call the authentication service url to authenticate
+          var username=this.get('email');
+          var pWord=this.get('password');
+          if(username ==='' || pWord ===''){
+              $.gritter.add({alertTitle:'Error',alertText:'All fields are required'});
+          }
+          else
+          {
+          if (this.credentialsValid(username,pWord)) {
               this.set('authenticated', true);
           } else {
-              this.incrementProperty('failedAttempts');
+              $.gritter.add({text:'Login failed',title:'Error'});
+              this.set('authenticated',false);
+          }
           }
       },
 
-      credentialsValid: function() {
-          //call the authentication service url to authenticate
-          return this.get('email') === 'jamie@jgwhite.co.uk'
-              && this.get('password') === 'ilovejam';
+      credentialsValid: function(username,pWord) {
+          var ret=false;
+
+          jQuery.ajax({
+              url:'/api/auth/credentials',
+              data: {UserName:username,Password:pWord,RememberMe:true},
+              dataType: 'json',
+              type: 'POST',
+
+              success: function(data) {
+                  ret=true;
+              },
+              error:function(){
+                  ret=false;
+
+              }
+          });
+
+
+          return ret;
       },
       logOut:function(){
         //log the user out via the service
@@ -218,6 +288,57 @@ window.require.define({"controllers/message": function(exports, require, module)
       allMessages:function(){
           return '';
       }
+  });
+}});
+
+window.require.define({"controllers/reg": function(exports, require, module) {
+  var App = require('app');
+  App.RegController=Em.Controller.extend({
+      email:'',
+      firstName:'',
+      lastName:'',
+      password:'',
+      passwordRepeat:'',
+      fullName:function(){
+          var firstName = this.get('firstName');
+          var lastName = this.get('lastName');
+
+          return firstName + ' ' + lastName;
+      }.property('firstName', 'lastName')
+      ,
+      registerUser:function(){
+          var mail=this.get('email');
+          var fName=this.get('firstName');
+          var lName= this.get('lastName');
+          var pWord=this.get('password');
+          var rPWord=this.get('passwordRepaet')
+         if(mail==='' || fName==='' ||lName==='' || pWord===''|| rPWord===''){
+             $.gritter.add({alertTitle:'Error',alertText:'All fields are required'});
+         } else
+         {
+             if(pWord===rPWord){
+                 var dName=this.get('fullName');
+                 jQuery.ajax({
+                     url:'/api/register',
+                     data: {UserName:mail,FirstName:fName,LastName:lName,DisplayName:dName,Email:mail,Password:pWord,AutoLogin:false},
+                     dataType: 'json',
+                     type: 'POST',
+
+                     success: function(data) {
+                         this.get('target').send('loggedOff');
+                     },
+                     error:function(){
+                         $.gritter.add({alertText:'Registration failed',alertTitle:'Error'});
+                     }
+                 });
+             }
+             else
+             {
+                 $.gritter.add({alertTitle:'Error!',alertText:'Passwords do not match'});
+             }
+         }
+      }
+
   });
 }});
 
@@ -279,14 +400,17 @@ window.require.define({"models/message": function(exports, require, module) {
       PhoneNumber:DS.attr('string'),
       MessageText:DS.attr('string'),
       reopenClass:{
-          url:'messages'
+          url:'/messages/'
       }
   });
   
 }});
 
 window.require.define({"models/user": function(exports, require, module) {
-  
+  // string SessionId
+  //string UserName
+  // string ReferrerUrl
+  //ResponseStatus ResponseStatus
 }});
 
 window.require.define({"router": function(exports, require, module) {
@@ -379,9 +503,19 @@ window.require.define({"router": function(exports, require, module) {
               initialState: 'auth',
 
               auth: Em.Route.extend({
-                  route: '/auth',
+                  route: '/auth'
+                  ,
+                  register:function(router){
+                   router.transitionTo('reg');
+                  },
                   connectOutlets: function(router) {
                       router.get('applicationController').connectOutlet('auth');
+                  }
+              }),
+              reg:Em.Route.extend({
+                  route:'/reg',
+                  connectOutlets:function(router){
+                      router.get('applicationController').connectOutlet('reg');
                   }
               }),
 
@@ -394,8 +528,10 @@ window.require.define({"router": function(exports, require, module) {
               },
               loggedOff:function(router){
                   router.transitionTo('unauthenticated');
+              },
+              registered:function(router){
+                  router.transitionTo('auth');
               }
-
           })
 
       })
@@ -444,7 +580,7 @@ window.require.define({"templates/application": function(exports, require, modul
     tmp1.contexts.push(stack1);
     tmp1.data = data;
     stack1 = stack3.call(depth0, stack2, tmp1);
-    data.buffer.push(escapeExpression(stack1) + "\n      <div class=\"span9\" id=\"content\">\n        <div class=\"row-fluid\">\n     <!-- message po -->\n          ");
+    data.buffer.push(escapeExpression(stack1) + "\n\n        <div class=\"row-fluid\">\n          ");
     stack1 = depth0;
     stack2 = "outlet";
     stack3 = helpers._triageMustache;
@@ -454,7 +590,71 @@ window.require.define({"templates/application": function(exports, require, modul
     tmp1.contexts.push(stack1);
     tmp1.data = data;
     stack1 = stack3.call(depth0, stack2, tmp1);
-    data.buffer.push(escapeExpression(stack1) + "\n          </div>\n        </div>\n        </div>\n    <footer>\n    </footer>\n    </div>\n   </div>");
+    data.buffer.push(escapeExpression(stack1) + "\n          </div>\n\n        </div>\n    <footer>\n    </footer>\n    </div>\n   </div>");
+    return buffer;
+  });
+   module.exports = module.id;
+}});
+
+window.require.define({"templates/auth": function(exports, require, module) {
+  
+  Ember.TEMPLATES[module.id] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+  helpers = helpers || Ember.Handlebars.helpers;
+    var buffer = '', stack1, stack2, stack3, stack4, foundHelper, tmp1, self=this, escapeExpression=this.escapeExpression;
+
+
+    data.buffer.push(" <div class=\"row-fluid\">\n                        <div class=\"span12\">\n                            <div class=\"box alternate\">\n                                <div class=\"box-title\">\n                                    Login\n                                </div>\n                                <div class=\"box-content nopadding\">\n                                    <form name=\"exampleform\" action=\"#\" method=\"get\" class=\"form-horizontal\">\n                                        <div class=\"control-group\">\n                                            <label class=\"control-label\">Email</label>\n                                            <div class=\"controls\">\n                                                ");
+    stack1 = depth0;
+    stack2 = "Ember.Textfield";
+    stack3 = {};
+    stack4 = "email";
+    stack3['valueBinding'] = stack4;
+    stack4 = helpers.view;
+    tmp1 = {};
+    tmp1.hash = stack3;
+    tmp1.contexts = [];
+    tmp1.contexts.push(stack1);
+    tmp1.data = data;
+    stack1 = stack4.call(depth0, stack2, tmp1);
+    data.buffer.push(escapeExpression(stack1) + "\n                                                <span class=\"help-inline\">Enter your email address</span>\n                                            </div>\n                                        </div>\n                                        <div class=\"control-group\">\n                                            <label class=\"control-label\">Password</label>\n                                            <div class=\"controls\">\n                                               ");
+    stack1 = depth0;
+    stack2 = "Ember.Textfield";
+    stack3 = {};
+    stack4 = "password";
+    stack3['type'] = stack4;
+    stack4 = "password";
+    stack3['valueBinding'] = stack4;
+    stack4 = helpers.view;
+    tmp1 = {};
+    tmp1.hash = stack3;
+    tmp1.contexts = [];
+    tmp1.contexts.push(stack1);
+    tmp1.data = data;
+    stack1 = stack4.call(depth0, stack2, tmp1);
+    data.buffer.push(escapeExpression(stack1) + "\n                                                <span class=\"help-inline\">Your password</span>\n                                            </div>\n                                        </div>\n                                         <div class=\"form-actions\">\n                                         <a class=\"btn\" ");
+    stack1 = depth0;
+    stack2 = "authenticate";
+    stack3 = {};
+    stack4 = "controller";
+    stack3['target'] = stack4;
+    stack4 = helpers.action;
+    tmp1 = {};
+    tmp1.hash = stack3;
+    tmp1.contexts = [];
+    tmp1.contexts.push(stack1);
+    tmp1.data = data;
+    stack1 = stack4.call(depth0, stack2, tmp1);
+    data.buffer.push(escapeExpression(stack1) + ">Log in</a>\n                                         <a class=\"btn\" ");
+    stack1 = depth0;
+    stack2 = "register";
+    stack3 = helpers.action;
+    tmp1 = {};
+    tmp1.hash = {};
+    tmp1.contexts = [];
+    tmp1.contexts.push(stack1);
+    tmp1.data = data;
+    stack1 = stack3.call(depth0, stack2, tmp1);
+    data.buffer.push(escapeExpression(stack1) + ">click me</a>\n                                            <input type=\"submit\" class=\"btn btn-primary\" value=\"Login\" />\n                                               <button class=\"btn\" >Register</button>\n                                            </div>\n                                     </form>\n                                 </div>\n                             </div>\n                        </div>\n </div>");
     return buffer;
   });
    module.exports = module.id;
@@ -464,10 +664,12 @@ window.require.define({"templates/layout/navigation": function(exports, require,
   
   Ember.TEMPLATES[module.id] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
   helpers = helpers || Ember.Handlebars.helpers;
-    var buffer = '', stack1, stack2, stack3, stack4, stack5, foundHelper, tmp1, self=this, escapeExpression=this.escapeExpression;
+    var stack1, stack2, stack3, foundHelper, tmp1, self=this, escapeExpression=this.escapeExpression;
 
-
-    data.buffer.push("<div class=\"span3 leftmenu\">\n\n<ul class=\"nav\">\n        <li>\n          <a href=\"#\">\n            <span class=\"ico\"><i class=\"icon-envelope\"></i></span><span class=\"text\">Messages</span>\n            <span class=\"indicator\"></span><b class=\"caret\"></b>\n          </a>\n          <ul >\n            <li>\n              <a ");
+  function program1(depth0,data) {
+    
+    var buffer = '', stack1, stack2, stack3, stack4, stack5;
+    data.buffer.push("\n<div class=\"span3 leftmenu\">\n\n<ul class=\"nav\">\n        <li>\n          <a href=\"#\">\n            <span class=\"ico\"><i class=\"icon-envelope\"></i></span><span class=\"text\">Messages</span>\n            <span class=\"indicator\"></span><b class=\"caret\"></b>\n          </a>\n          <ul >\n            <li>\n              <a ");
     stack1 = depth0;
     stack2 = "message";
     stack3 = depth0;
@@ -558,8 +760,22 @@ window.require.define({"templates/layout/navigation": function(exports, require,
     tmp1.contexts.push(stack1);
     tmp1.data = data;
     stack1 = stack5.call(depth0, stack4, stack2, tmp1);
-    data.buffer.push(escapeExpression(stack1) + ">\n                                <span class=\"ico\"><i class=\"icon-play\"></i></span><span class=\"text\">Lock Device</span>\n                           </a>\n                        </li>\n\n                     </ul>\n                 </li>\n</ul>\n</div>");
-    return buffer;
+    data.buffer.push(escapeExpression(stack1) + ">\n                                <span class=\"ico\"><i class=\"icon-play\"></i></span><span class=\"text\">Lock Device</span>\n                           </a>\n                        </li>\n\n                     </ul>\n                 </li>\n</ul>\n</div>\n");
+    return buffer;}
+
+    stack1 = depth0;
+    stack2 = "authenticated";
+    stack3 = helpers['if'];
+    tmp1 = self.program(1, program1, data);
+    tmp1.hash = {};
+    tmp1.contexts = [];
+    tmp1.contexts.push(stack1);
+    tmp1.fn = tmp1;
+    tmp1.inverse = self.noop;
+    tmp1.data = data;
+    stack1 = stack3.call(depth0, stack2, tmp1);
+    if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+    else { data.buffer.push(''); }
   });
    module.exports = module.id;
 }});
@@ -570,8 +786,10 @@ window.require.define({"templates/layout/userNav": function(exports, require, mo
   helpers = helpers || Ember.Handlebars.helpers;
     var buffer = '', stack1, stack2, stack3, foundHelper, tmp1, self=this, escapeExpression=this.escapeExpression;
 
-
-    data.buffer.push("<div id=\"userinfo\" class=\"column\">\n            <a class=\"userinfo dropown-toggle\" data-toggle=\"dropdown\" href=\"#\">\n                <span><strong>");
+  function program1(depth0,data) {
+    
+    var buffer = '', stack1, stack2, stack3;
+    data.buffer.push("\n<div id=\"userinfo\" class=\"column\">\n            <a class=\"userinfo dropown-toggle\" data-toggle=\"dropdown\" href=\"#\">\n                <span><strong>");
     stack1 = depth0;
     stack2 = "userName";
     stack3 = helpers._triageMustache;
@@ -592,6 +810,21 @@ window.require.define({"templates/layout/userNav": function(exports, require, mo
     tmp1.data = data;
     stack1 = stack3.call(depth0, stack2, tmp1);
     data.buffer.push(escapeExpression(stack1) + "><i class=\"icon-off\"></i>Logout</a></li>\n         </ul>\n</div>\n");
+    return buffer;}
+
+    stack1 = depth0;
+    stack2 = "authenticated";
+    stack3 = helpers['if'];
+    tmp1 = self.program(1, program1, data);
+    tmp1.hash = {};
+    tmp1.contexts = [];
+    tmp1.contexts.push(stack1);
+    tmp1.fn = tmp1;
+    tmp1.inverse = self.noop;
+    tmp1.data = data;
+    stack1 = stack3.call(depth0, stack2, tmp1);
+    if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+    data.buffer.push("\n");
     return buffer;
   });
    module.exports = module.id;
@@ -621,6 +854,70 @@ window.require.define({"templates/messages/messages": function(exports, require,
    module.exports = module.id;
 }});
 
+window.require.define({"templates/reg": function(exports, require, module) {
+  
+  Ember.TEMPLATES[module.id] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+  helpers = helpers || Ember.Handlebars.helpers;
+    var buffer = '', stack1, stack2, stack3, stack4, foundHelper, tmp1, self=this, escapeExpression=this.escapeExpression;
+
+
+    data.buffer.push(" <div class=\"row-fluid\">\n                        <div class=\"span12\">\n                            <div class=\"box alternate\">\n                                <div class=\"box-title\">\n                                    Login\n                                </div>\n                                <div class=\"box-content nopadding\">\n                                    <form name=\"exampleform\" action=\"#\" method=\"get\" class=\"form-horizontal\">\n                                        <div class=\"control-group\">\n                                            <label class=\"control-label\">Email</label>\n                                            <div class=\"controls\">\n                                                ");
+    stack1 = depth0;
+    stack2 = "Ember.Textfield";
+    stack3 = {};
+    stack4 = "email";
+    stack3['valueBinding'] = stack4;
+    stack4 = helpers.view;
+    tmp1 = {};
+    tmp1.hash = stack3;
+    tmp1.contexts = [];
+    tmp1.contexts.push(stack1);
+    tmp1.data = data;
+    stack1 = stack4.call(depth0, stack2, tmp1);
+    data.buffer.push(escapeExpression(stack1) + "\n                                                <span class=\"help-inline\">Enter your email address</span>\n                                            </div>\n                                        </div>\n                                        <div class=\"control-group\">\n                                            <label class=\"control-label\">Password</label>\n                                            <div class=\"controls\">\n                                               ");
+    stack1 = depth0;
+    stack2 = "Ember.Textfield";
+    stack3 = {};
+    stack4 = "password";
+    stack3['type'] = stack4;
+    stack4 = "password";
+    stack3['valueBinding'] = stack4;
+    stack4 = helpers.view;
+    tmp1 = {};
+    tmp1.hash = stack3;
+    tmp1.contexts = [];
+    tmp1.contexts.push(stack1);
+    tmp1.data = data;
+    stack1 = stack4.call(depth0, stack2, tmp1);
+    data.buffer.push(escapeExpression(stack1) + "\n                                                <span class=\"help-inline\">Your password</span>\n                                            </div>\n                                        </div>\n                                         <div class=\"form-actions\">\n                                         <a class=\"btn\" ");
+    stack1 = depth0;
+    stack2 = "authenticate";
+    stack3 = {};
+    stack4 = "controller";
+    stack3['target'] = stack4;
+    stack4 = helpers.action;
+    tmp1 = {};
+    tmp1.hash = stack3;
+    tmp1.contexts = [];
+    tmp1.contexts.push(stack1);
+    tmp1.data = data;
+    stack1 = stack4.call(depth0, stack2, tmp1);
+    data.buffer.push(escapeExpression(stack1) + ">Log in</a>\n                                         <a class=\"btn\" ");
+    stack1 = depth0;
+    stack2 = "register";
+    stack3 = helpers.action;
+    tmp1 = {};
+    tmp1.hash = {};
+    tmp1.contexts = [];
+    tmp1.contexts.push(stack1);
+    tmp1.data = data;
+    stack1 = stack3.call(depth0, stack2, tmp1);
+    data.buffer.push(escapeExpression(stack1) + ">click me</a>\n                                            <input type=\"submit\" class=\"btn btn-primary\" value=\"Login\" />\n                                               <button class=\"btn\" >Register</button>\n                                            </div>\n                                     </form>\n                                 </div>\n                             </div>\n                        </div>\n </div>");
+    return buffer;
+  });
+   module.exports = module.id;
+}});
+
 window.require.define({"views": function(exports, require, module) {
   // load all your views here
 
@@ -628,6 +925,7 @@ window.require.define({"views": function(exports, require, module) {
   require('views/messages/message');
   require('views/messages/messages');
   require('views/auth');
+  require('views/reg');
   require('views/users/user');
   require('views/layout/userNav');
   require('views/layout/navigation');
@@ -644,6 +942,9 @@ window.require.define({"views/application": function(exports, require, module) {
 
 window.require.define({"views/auth": function(exports, require, module) {
   var App = require('app');
+  App.AuthView=Em.View.extend({
+      templateName:require('templates/auth')
+  });
   
 }});
 
@@ -666,6 +967,13 @@ window.require.define({"views/layout/navigation": function(exports, require, mod
   });
 }});
 
+window.require.define({"views/layout/userNav": function(exports, require, module) {
+  var App=require('app');
+  App.UserNavView=Em.View.extend({
+      templateName:require('templates/userNav')
+  });
+}});
+
 window.require.define({"views/messages/message": function(exports, require, module) {
   var App = require('app');
 }});
@@ -679,6 +987,13 @@ window.require.define({"views/messages/messages": function(exports, require, mod
    * To change this template use File | Settings | File Templates.
    */
   
+}});
+
+window.require.define({"views/reg": function(exports, require, module) {
+  var App=reuire('app');
+  App.RegView=Em.View.extend({
+      templateName:require('templates/reg')
+  });
 }});
 
 window.require.define({"views/users/user": function(exports, require, module) {

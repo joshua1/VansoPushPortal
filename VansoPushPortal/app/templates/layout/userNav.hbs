@@ -1,0 +1,12 @@
+{{#if authenticated}}
+<div id="userinfo" class="column">
+            <a class="userinfo dropown-toggle" data-toggle="dropdown" href="#">
+                <span><strong>{{userName}}</strong></span>
+            </a>
+         <ul class="dropdown-menu">
+            <li><a href=""> <i class="icon-user"></i>Profile </a> </li>
+            <li class="divider"></li>
+            <li><a {{action logOut}}><i class="icon-off"></i>Logout</a></li>
+         </ul>
+</div>
+{{/if}}

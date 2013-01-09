@@ -1,0 +1,76 @@
+{{#if authenticated}}
+<div class="span3 leftmenu">
+
+<ul class="nav">
+        <li>
+          <a href="#">
+            <span class="ico"><i class="icon-envelope"></i></span><span class="text">Messages</span>
+            <span class="indicator"></span><b class="caret"></b>
+          </a>
+          <ul >
+            <li>
+              <a {{action doTransition "message"}}>
+                  <span class="ico"><i class="icon-play"></i></span><span class="text">Send Message</span>
+              </a>
+            </li>
+            <li>
+              <a {{action doTransition "messages"}}>
+                  <span class="ico"><i class="icon-th"></i></span><span class="text">Sent Messages</span>
+             </a>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+                  <a href="#">
+                    <span class="ico"><i class="icon-tags"></i></span><span class="text">Tags</span>
+                    <span class="indicator"></span></b>
+                  </a>
+                  <ul >
+                    <li>
+                     <a {{action doTransition "tag"}}>
+                          <span class="ico"><i class="icon-play"></i></span><span class="text">Add Tag</span>
+                      </a>
+                    </li>
+                    <li {{action doTransition "tags"}}>
+                      <a>
+                          <span class="ico"><i class="icon-th"></i></span><span class="text">All Tags</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a href="#">
+                    <span class="ico"><i class="icon-map-marker"></i></span><span class="text">Geo Zones</span>
+                    <span class="indicator"></span>
+                  </a>
+                  <ul >
+                    <li>
+                      <a {{action doTransition "geoZone"}}>
+                          <span class="ico"><i class="icon-play"></i></span><span class="text">Add Geo Zone</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a {{action doTransition "geoZones"}}>
+                        <span class="ico"><i class="icon-th"></i></span><span class="text">All Geo Zones</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                 <li>
+                     <a href="#">
+                        <span class="ico"><i class="icon-map-marker"></i></span><span class="text">Device</span>
+                        <span class="indicator"></span>
+                     </a>
+                     <ul >
+                        <li>
+                           <a {{action doTransition "device"}}>
+                                <span class="ico"><i class="icon-play"></i></span><span class="text">Lock Device</span>
+                           </a>
+                        </li>
+
+                     </ul>
+                 </li>
+</ul>
+</div>
+{{/if}}
