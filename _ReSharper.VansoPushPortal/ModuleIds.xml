@@ -1,7 +1,0 @@
-<Modules>
-  <Module PersistentId="7499A9C0-33DF-463F-B848-D7FBB870AE91" ModuleId="ServiceModel" />
-  <Module PersistentId="653D45A9-07DB-4D33-B6DC-5BFA2DAD34F3" ModuleId="ServiceLogic" />
-  <Module PersistentId="8553F98B-B56F-45D1-B164-793BA13E63ED" ModuleId="VansoPushPortal" />
-  <Module PersistentId="ServiceStack.Interfaces, Version=3.9.32.0, Culture=neutral, PublicKeyToken=null" ModuleId="ServiceStack.Interfaces" />
-  <Module PersistentId="ServiceStack.ServiceInterface, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" ModuleId="ServiceStack.ServiceInterface" />
-</Modules>
