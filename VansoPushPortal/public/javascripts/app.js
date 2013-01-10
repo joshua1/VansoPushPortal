@@ -1003,7 +1003,7 @@ window.require.define({"views/messages/messages": function(exports, require, mod
 }});
 
 window.require.define({"views/reg": function(exports, require, module) {
-  var App=reuire('app');
+  var App=require('app');
   App.RegView=Em.View.extend({
       templateName:require('templates/reg')
   });
