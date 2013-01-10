@@ -561,7 +561,7 @@ window.require.define({"templates/application": function(exports, require, modul
     var buffer = '', stack1, stack2, stack3, foundHelper, tmp1, self=this, escapeExpression=this.escapeExpression;
 
 
-    data.buffer.push("<div class=\"container-fluid nopadding\">\n<div class=\"row-fluid\">\n    <div class=\"span12\">\n      <div id=\"header\">\n        <a href=\"#\" class=\"logo\">\n         \n        </a>\n        <div class=\"hright\">\n            ");
+    data.buffer.push("<div class=\"container-fluid nopadding\">\n<div class=\"row-fluid\">\n    <div class=\"span12\">\n      <div id=\"header\">\n        <a href=\"#\" class=\"logo\">\n\n        </a>\n        <div class=\"hright\">\n            ");
     stack1 = depth0;
     stack2 = "App.UserNavView";
     stack3 = helpers.view;
