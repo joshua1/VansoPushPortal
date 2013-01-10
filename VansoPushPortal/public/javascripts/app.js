@@ -983,7 +983,7 @@ window.require.define({"views/layout/navigation": function(exports, require, mod
 window.require.define({"views/layout/userNav": function(exports, require, module) {
   var App=require('app');
   App.UserNavView=Em.View.extend({
-      templateName:require('templates/userNav')
+      templateName:require('templates/layout/userNav')
   });
 }});
 
