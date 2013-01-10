@@ -561,7 +561,7 @@ window.require.define({"templates/application": function(exports, require, modul
     var buffer = '', stack1, stack2, stack3, foundHelper, tmp1, self=this, escapeExpression=this.escapeExpression;
 
 
-    data.buffer.push("<div class=\"container\">\n\n    <div class=\"well\">\n\n    </div>\n</div>\n<div class=\"row-fluid\">\n    <div class=\"span12\">\n      <div id=\"header\">\n        <a href=\"#\" >\n         <image src=\"img/logo.png\" />\n        </a>\n        <div class=\"hright\">\n            ");
+    data.buffer.push("<div class=\"container-fluid nopadding\">\n<div class=\"row-fluid\">\n    <div class=\"span12\">\n      <div id=\"header\">\n        <a href=\"#\" class=\"logo\">\n         <image src=\"img/logo.png\" />\n        </a>\n        <div class=\"hright\">\n            ");
     stack1 = depth0;
     stack2 = "App.UserNavView";
     stack3 = helpers.view;
@@ -571,7 +571,7 @@ window.require.define({"templates/application": function(exports, require, modul
     tmp1.contexts.push(stack1);
     tmp1.data = data;
     stack1 = stack3.call(depth0, stack2, tmp1);
-    data.buffer.push(escapeExpression(stack1) + "\n\n        </div>\n      </div>\n    </div>\n  </div>\n  </div>\n\n  <div class=\"container-fluid\" id=\"container\">\n    <div class=\"row-fluid\">\n           ");
+    data.buffer.push(escapeExpression(stack1) + "\n\n        </div>\n      </div>\n    </div>\n  </div>\n  </div>\n </div>\n  <div class=\"container-fluid\" id=\"container\">\n    <div class=\"row-fluid\">\n           ");
     stack1 = depth0;
     stack2 = "App.NavigationView";
     stack3 = helpers.view;
@@ -591,7 +591,7 @@ window.require.define({"templates/application": function(exports, require, modul
     tmp1.contexts.push(stack1);
     tmp1.data = data;
     stack1 = stack3.call(depth0, stack2, tmp1);
-    data.buffer.push(escapeExpression(stack1) + "\n          </div>\n\n        </div>\n    <footer>\n    </footer>\n    </div>\n   </div>");
+    data.buffer.push(escapeExpression(stack1) + "\n          </div>\n\n        </div>\n    <footer>\n    </footer>\n    </div>\n   </div>\n");
     return buffer;
   });
    module.exports = module.id;
