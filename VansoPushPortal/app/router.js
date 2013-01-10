@@ -14,8 +14,10 @@ App.Router = Em.Router.extend({
                 // It's not at all obvious why this works :(
                 Em.run.next(function() {
                     if (authenticated) {
+                        console.log('authenticated');
                         router.transitionTo('authenticated');
                     } else {
+                        console.log('not authenticated');
                         router.transitionTo('unauthenticated');
                     }
                 })
