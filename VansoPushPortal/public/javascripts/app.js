@@ -976,7 +976,7 @@ window.require.define({"views/layout/navigation": function(exports, require, mod
   var App=require('app');
 
   App.NavigationView=Em.View.extend({
-      templateName:require('templates/navigation')
+      templateName:require('templates/layout/navigation')
   });
 }});
 
